@@ -47,8 +47,8 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
     week_day = datetime.today().weekday()
     check_day = datetime.now().minute
     LIST_WEEKDAY = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
-    await callback.message.answer(
-        text=f'{LIST_WEEKDAY[num_task]}:{TEST_LIST_TIME[num_task + 2]}-{TEST_LIST_TIME[num_task + 3]}')
+    # await callback.message.answer(
+    #     text=f'{LIST_WEEKDAY[num_task]}:{TEST_LIST_TIME[num_task + 2]}-{TEST_LIST_TIME[num_task + 3]}')
     # if TEST_LIST_TIME[num_task+2] <= check_day <= TEST_LIST_TIME[num_task+3]:
     # если сегодня понедельник
     if week_day == 0:
@@ -83,7 +83,7 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
         if 'done_task' not in user_dict[callback.message.chat.id].keys():
             await state.update_data(done_task=0)
         # # первое досыльное сообщение
-        await asyncio.sleep(10)
+        await asyncio.sleep(1 * 60 * 60)
         user_dict[callback.message.chat.id] = await state.get_data()
         print(user_dict[callback.message.chat.id])
         list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
@@ -96,7 +96,7 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
                                                f'Если нет - скорее выполняй и не забудь сделать и сохранить скриншот,'
                                                f' а после нажать кнопку "Выполнено" ниже.',
                                           reply_markup=keyboard_task(num_task=num_task))
-            await asyncio.sleep(30)
+            await asyncio.sleep(3 * 60 * 60)
             user_dict[callback.message.chat.id] = await state.get_data()
             info_user_raffle = get_info_user_raffle(id_telegram=callback.message.chat.id, date_raffle=date_raffle)
             if info_user_raffle[3] == num_task and datetime.today().weekday() == 6:
@@ -210,7 +210,7 @@ async def get_task_monday(num_task: int, bot: Bot):
                                          parse_mode='html')
 
     # первое досыльное сообщение
-    await asyncio.sleep(60 * 60)
+    await asyncio.sleep(1 * 60 * 60)
     list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
     # если количество выполненных заданий не изменилось и
     check_day = datetime.now().minute
