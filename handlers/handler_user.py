@@ -1,5 +1,5 @@
 from aiogram import Router, F, Bot
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.filters import CommandStart, or_f
 
 from config_data.config import Config, load_config
@@ -22,6 +22,7 @@ config: Config = load_config()
 
 class User(StatesGroup):
     username = State()
+
 
 def validate_russian_phone_number(phone_number):
     # Паттерн для российских номеров телефона
@@ -50,7 +51,7 @@ async def process_start_command_user(message: Message) -> None:
                              reply_markup=keyboards_start_admin())
     await message.answer(text=f'Приветствую, {message.from_user.first_name}!\n'
                               f'Если ты запустил(а) этого бота, значит хочешь стать одним из победителей еженедельного'
-                              f' розыгрыша ХХХ рублей от НАС.\n\n'
+                              f' розыгрыша 5000 рублей от НАС.\n\n'
                               f'От этого тебя отделяет всего 5 заданий. По одному в день!\n\n'
                               f'Соглашаешься на участие?',
                          reply_markup=keyboard_start_user())
@@ -59,8 +60,8 @@ async def process_start_command_user(message: Message) -> None:
 @router.callback_query(F.data == 'condition')
 async def read_condition(callback: CallbackQuery) -> None:
     logging.info(f'read_condition: {callback.message.chat.id}')
-    await callback.message.answer(text=f'Слушай, условия простые, как раз-два-три!\\n'
-                                       f'1. Каждый понедельник в этом боте тебе будет приходить приглашение участвовать в активностях новой недели. НЕ пропусти его, иначе не сможешь получать задания.\\n'
+    await callback.message.answer(text=f'Слушай, условия простые, как раз-два-три!\n'
+                                       f'1. Каждый понедельник в этом боте тебе будет приходить приглашение участвовать в активностях новой недели. НЕ пропусти его, иначе не сможешь получать задания.\n'
                                        f'2. C Пн по Пт будут приходит задания. Выполняй и не забудь нажать "Выполнено!".\n'
                                        f'Мы заботливо ДВАЖДЫ напомним тебе о необходимости выполнить новое задание.\n'
                                        f'Твоя задача успеть выполнить его до выхода следующего!\n\n'
@@ -89,20 +90,24 @@ async def select_not_confirm_username(callback: CallbackQuery, state: FSMContext
 
 
 @router.message(F.text == 'Отмена', StateFilter(User.username))
-async def process_start_command_user(message: Message, state: FSMContext) -> None:
+async def process_cancel_get_phone(message: Message, state: FSMContext) -> None:
     logging.info("process_start_command_user")
     await state.set_state(default_state)
-    await process_start_command_user(message=message, state=state)
+    await message.answer(text=f'Для участия тебя нужно внести в базу участников!',
+                         reply_markup=ReplyKeyboardRemove())
+    await message.answer(text=f'Записать, как @{message.from_user.username}*?\n\n'
+                              f'* - если твой ник не отобразился, нажми «Нет».',
+                         reply_markup=keyboard_get_username())
 
 
 @router.message(or_f(F.text, F.contact), StateFilter(User.username))
-async def process_start_command_user(message: Message, state: FSMContext) -> None:
+async def process_validate_russian_phone_number(message: Message, state: FSMContext) -> None:
     logging.info("process_start_command_user")
     if message.contact:
         phone = str(message.contact.phone_number)
     else:
         phone = message.text
-        if not validate_russian_phone_number(phone):
+        if not validate_russian_phone_number(phone) or phone != 'Отмена':
             await message.answer(text="Неверный формат номера. Повторите ввод, например 89991112222:")
             return
     await state.update_data(username=phone)
