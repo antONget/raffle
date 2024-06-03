@@ -49,7 +49,7 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
     LIST_WEEKDAY = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
     # await callback.message.answer(
     #     text=f'{LIST_WEEKDAY[num_task]}:{TEST_LIST_TIME[num_task + 2]}-{TEST_LIST_TIME[num_task + 3]}')
-    # if TEST_LIST_TIME[num_task+2] <= check_day <= TEST_LIST_TIME[num_task+3]:
+    # if TEST_LIST_TIME[2] <= check_day < TEST_LIST_TIME[3]:
     # если сегодня понедельник
     if week_day == 0:
         # создаем таблицу участников если еще не создана
@@ -84,23 +84,25 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
             await state.update_data(done_task=0)
         # # первое досыльное сообщение
         await asyncio.sleep(1 * 60 * 60)
+        # await asyncio.sleep(1 * 10 * 1)
         user_dict[callback.message.chat.id] = await state.get_data()
         print(user_dict[callback.message.chat.id])
         list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
         # если количество выполненных заданий не изменилось и
         info_user_raffle = get_info_user_raffle(id_telegram=callback.message.chat.id, date_raffle=date_raffle)
         if info_user_raffle[3] == num_task and datetime.today().weekday() == 6:
-        # if info_user_raffle[3] == num_task and (TEST_LIST_TIME[num_task+2] <= check_day <= TEST_LIST_TIME[num_task+3]):#datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
+        # if info_user_raffle[3] == num_task and (TEST_LIST_TIME[num_task+2] <= check_day < TEST_LIST_TIME[num_task+3]):#datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
             await callback.message.answer(text=f'Выше мы прислали тебе {list_task_name[0]} задание!\n'
                                                f'Оно выполнено?\n\n'
                                                f'Если нет - скорее выполняй и не забудь сделать и сохранить скриншот,'
                                                f' а после нажать кнопку "Выполнено" ниже.',
                                           reply_markup=keyboard_task(num_task=num_task))
             await asyncio.sleep(3 * 60 * 60)
+            # await asyncio.sleep(3 * 10 * 1)
             user_dict[callback.message.chat.id] = await state.get_data()
             info_user_raffle = get_info_user_raffle(id_telegram=callback.message.chat.id, date_raffle=date_raffle)
-            if info_user_raffle[3] == num_task and datetime.today().weekday() == 6:
-            # if info_user_raffle[3] == num_task and (TEST_LIST_TIME[num_task+2] <= check_day <= TEST_LIST_TIME[num_task+3]):#datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
+            # if info_user_raffle[3] == num_task and datetime.today().weekday() == 6:
+            if info_user_raffle[3] == num_task and (TEST_LIST_TIME[num_task+2] <= check_day < TEST_LIST_TIME[num_task+3]):#datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
                 await callback.message.answer(text=f'Осталось совсем немного времени, чтобы выполнить {list_task_name[0]} задание.'
                                                    f' Больше напоминать не будем!\n\n'
                                                    f'Скорее выполняй! Не забудь сделать и сохранить скриншот, а после'
@@ -141,7 +143,7 @@ async def confirm_done_task(callback: CallbackQuery, state: FSMContext) -> None:
     check_day = datetime.now().minute
     num_task = int(callback.data.split('_')[2])
     if num_task < 4:
-        # if TEST_LIST_TIME[num_task + 2] <= check_day <= TEST_LIST_TIME[num_task + 3]:
+        # if TEST_LIST_TIME[num_task + 2] <= check_day < TEST_LIST_TIME[num_task + 3]:
         if num_task == datetime.today().weekday():
             text_done_task = ['Первое задание ✅\n\nЖди завтра второе!',
                               'Так держать! Уже два задания из пяти сделано✅',
@@ -160,8 +162,8 @@ async def confirm_done_task(callback: CallbackQuery, state: FSMContext) -> None:
             await callback.message.answer(text=f'Сожалеем, но ты не успел выполнить {list_task_name[num_task]} задание во время! И не можешь продолжить борьбу за главный приз.\n\n'
                                                f'Но мы напомним тебе о новом розыгрыше в понедельник.')
     else:
-        if TEST_LIST_TIME[num_task + 2] <= check_day:
-            # if True:#user_dict[callback.message.chat.id]['done_task'] == datetime.today().weekday():weekday
+        # if TEST_LIST_TIME[num_task + 2] <= check_day:
+        if num_task == datetime.today().weekday():
             text_done_task = ['Первое задание ✅\n\nЖди завтра второе!',
                               'Так держать! Уже два задания из пяти сделано✅',
                               '✅Ты так легко выполнил и третье задание!\n\nЗавтра отправлю тебе еще одно.',
@@ -211,13 +213,14 @@ async def get_task_monday(num_task: int, bot: Bot):
 
     # первое досыльное сообщение
     await asyncio.sleep(1 * 60 * 60)
+    # await asyncio.sleep(1 * 10 * 1)
     list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
     # если количество выполненных заданий не изменилось и
     check_day = datetime.now().minute
     list_raffle = get_list_last_raffle(done_task=num_task)
     # print('214', num_task, list_raffle)
     for user_raffle in list_raffle:
-        # if (user_raffle[3] != -1 or user_raffle[3] == num_task) and (TEST_LIST_TIME[num_task + 2] <= check_day <= TEST_LIST_TIME[num_task + 3]):  # datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
+        # if (user_raffle[3] != -1 or user_raffle[3] == num_task) and (TEST_LIST_TIME[num_task + 2] <= check_day < TEST_LIST_TIME[num_task + 3]):  # datetime.today().weekday() == TEST_WEEK_DAY:#check_day:
         if (user_raffle[3] != -1 or user_raffle[3] == num_task) and datetime.today().weekday() == 0:
             result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
             if 'result' in result:
@@ -228,10 +231,11 @@ async def get_task_monday(num_task: int, bot: Bot):
                                             f' а после нажать кнопку "Выполнено" ниже.',
                                        reply_markup=keyboard_task(num_task=num_task))
             await asyncio.sleep(3 * 60 * 60)
+            # await asyncio.sleep(1 * 30 * 1)
             list_raffle = get_list_last_raffle(done_task=num_task)
             for user_raffle in list_raffle:
                 if (user_raffle[3] != -1 or user_raffle[3] == num_task) and datetime.today().weekday() == 0:
-                # if (user_raffle[3] != -1 or user_raffle[3] == num_task) and (TEST_LIST_TIME[num_task + 2] <= check_day <= TEST_LIST_TIME[num_task + 3]):
+                # if (user_raffle[3] != -1 or user_raffle[3] == num_task) and (TEST_LIST_TIME[num_task + 2] <= check_day < TEST_LIST_TIME[num_task + 3]):
                     result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                     if 'result' in result:
                         await bot.send_message(chat_id=user_raffle[2],
@@ -250,7 +254,8 @@ async def select_winer(bot: Bot):
         list_winer = list_raffle
     text = ''
     for winer in list_winer:
-        text += f'{winer[2]}\n'
+        infor_user = get_info_user(telegram_id=winer[2])
+        text += f'{infor_user[2]}\n'
         result = get_telegram_user(user_id=winer[2], bot_token=config.tg_bot.token)
         if 'result' in result:
             await bot.send_message(chat_id=winer[2],

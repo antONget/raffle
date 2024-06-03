@@ -36,15 +36,26 @@ async def main():
     # понедельник
     scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=12, minute=0, args=(0, bot,))
     # вторник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=12, minute=0, args=(0, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=12, minute=0, args=(1, bot,))
     # среда
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=12, minute=0, args=(0, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=12, minute=0, args=(2, bot,))
     # четверг
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=12, minute=0, args=(0, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=12, minute=0, args=(3, bot,))
     # пятница
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(0, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
     # выбор победителей
     scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[2], args=(0, bot,))
+    # # вторник
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[3], args=(1, bot,))
+    # # среда
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[4], args=(2, bot,))
+    # # четверг
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[5], args=(3, bot,))
+    # # пятница
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[6], args=(4, bot,))
+    # # выбор победителей
+    # scheduler.add_job(select_winer, 'cron', day_of_week=0, minute=TEST_LIST_TIME[6]+2, args=(bot,))
     scheduler.start()
     # Регистрируем router в диспетчере
     dp.include_router(handler_user.router)
