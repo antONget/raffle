@@ -51,7 +51,7 @@ async def process_start_command_user(message: Message) -> None:
                              reply_markup=keyboards_start_admin())
     await message.answer(text=f'Приветствую, {message.from_user.first_name}!\n'
                               f'Если ты запустил(а) этого бота, значит хочешь стать одним из победителей еженедельного'
-                              f' розыгрыша 5000 рублей от НАС.\n\n'
+                              f' розыгрыша 5000 рублей от KSCLUB.\n\n'
                               f'От этого тебя отделяет всего 5 заданий. По одному в день!\n\n'
                               f'Соглашаешься на участие?',
                          reply_markup=keyboard_start_user())
