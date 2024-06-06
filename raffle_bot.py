@@ -33,18 +33,29 @@ async def main():
     bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher()
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
-    # понедельник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=12, minute=0, args=(0, bot,))
+    # # понедельник
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=12, minute=0, args=(0, bot,))
+    # # вторник
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=12, minute=0, args=(1, bot,))
+    # # среда
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=12, minute=0, args=(2, bot,))
+    # # четверг
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=12, minute=0, args=(3, bot,))
+    # # пятница
+    # scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
+    # # выбор победителей
+    # scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
+    scheduler.add_job(get_task_monday, 'cron', hour=12, args=(0, bot,))
     # вторник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=12, minute=0, args=(1, bot,))
+    scheduler.add_job(get_task_monday, 'cron', hour=12, args=(1, bot,))
     # среда
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=12, minute=0, args=(2, bot,))
+    scheduler.add_job(get_task_monday, 'cron', hour=12, args=(2, bot,))
     # четверг
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=12, minute=0, args=(3, bot,))
+    scheduler.add_job(get_task_monday, 'cron', hour=12, args=(3, bot,))
     # пятница
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
+    scheduler.add_job(get_task_monday, 'cron', hour=12, args=(4, bot,))
     # выбор победителей
-    scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
+    scheduler.add_job(select_winer, 'cron', hour=12, args=(bot,))
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[2], args=(0, bot,))
     # # вторник
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[3], args=(1, bot,))
