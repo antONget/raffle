@@ -48,7 +48,7 @@ async def task_monday(callback: CallbackQuery, num_task: int = 0) -> None:
     week_day = datetime.today().weekday()
     # !!!!! получаем час
     week_day = datetime.now().hour
-    hour = 14
+    hour = 15
     check_day = datetime.now().minute
     LIST_WEEKDAY = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
     # await callback.message.answer(
@@ -211,7 +211,7 @@ async def confirm_done_task(callback: CallbackQuery) -> None:
 async def get_task_monday(num_task: int, bot: Bot):
     # получаем список участников последнего розыгрыша выполнивших num_task заданий
     list_raffle = get_list_last_raffle(done_task=num_task)
-    hour = 14
+    hour = 15
     # получаем контент для заданного дня
     message_content = get_message_content(id_message=num_task + 1)
     # print(message_content)
