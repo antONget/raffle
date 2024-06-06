@@ -6,7 +6,7 @@ from config_data.config import Config, load_config
 from handlers import handler_user, handler_admin, other_handlers, handler_raffle
 from module.data_base import create_table_users, create_table_message_content
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from handlers.handler_raffle import get_task_monday, TEST_LIST_TIME, select_winer
+from handlers.handler_raffle import get_task_monday, TEST_LIST_TIME, select_winer, send_new_raffle
 # Инициализируем logger
 logger = logging.getLogger(__name__)
 
@@ -45,6 +45,7 @@ async def main():
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
     # # выбор победителей
     # scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
+    scheduler.add_job(send_new_raffle, 'cron', hour=12, args=(0, bot,))
     scheduler.add_job(get_task_monday, 'cron', hour=12, args=(0, bot,))
     # вторник
     scheduler.add_job(get_task_monday, 'cron', hour=12, args=(1, bot,))
