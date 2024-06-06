@@ -8,7 +8,7 @@ from aiogram.filters import CommandStart, or_f
 from config_data.config import Config, load_config
 from module.data_base import get_message_content, create_table_list_raffle, add_user_list_raffle, get_info_user,\
     set_done_task, get_list_last_raffle, get_list_user, get_info_user_raffle, get_last_date_raffle
-from keyboards.keyboard_raffle import keyboard_task
+from keyboards.keyboard_raffle import keyboard_task, keyboard_new_raffle
 import requests
 import logging
 from datetime import datetime, timedelta
@@ -128,7 +128,8 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
 
     else:
         # если пользователь зашел в розыгрыш не в понедельник
-        await callback.message.answer(text='Отлично! Теперь дождись понедельника и приступай к заданиям.')
+        await callback.message.answer(text='Отлично! Теперь дождись понедельника и приступай к заданиям 👨‍💻. '
+                                           'Напоминаем,  что на кону 5.000 рублей!')
         create_table_list_raffle()
         # дата розыгрыша
         week_day = datetime.today().weekday()
@@ -149,7 +150,7 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
 @router.callback_query(F.data == 'decline_task')
 async def confirm_decline_task(callback: CallbackQuery, state: FSMContext) -> None:
     logging.info(f'confirm_decline_task: {callback.message.chat.id}')
-    user_dict[callback.message.chat.id] = await state.get_data()
+    # user_dict[callback.message.chat.id] = await state.get_data()
     # date_raffle = user_dict[callback.message.chat.id]['date_raffle']
     # получаем дату последнего розыгрыша
     date_raffle = get_last_date_raffle()
@@ -161,7 +162,7 @@ async def confirm_decline_task(callback: CallbackQuery, state: FSMContext) -> No
 
 
 @router.callback_query(F.data.startswith('done_task'))
-async def confirm_done_task(callback: CallbackQuery, state: FSMContext) -> None:
+async def confirm_done_task(callback: CallbackQuery) -> None:
     logging.info(f'confirm_done_task: {callback.message.chat.id}')
     # user_dict[callback.message.chat.id] = await state.get_data()
     # check_day = datetime.now().hour
@@ -290,7 +291,8 @@ async def select_winer(bot: Bot):
         result = get_telegram_user(user_id=winer[2], bot_token=config.tg_bot.token)
         if 'result' in result:
             await bot.send_message(chat_id=winer[2],
-                                   text='Вы стати победителем этой недели. Поздравляем! Для получения выигрыша, напишите менеджеру')
+                                   text='Вы стати победителем этой недели. Поздравляем! Для получения выигрыша,'
+                                        ' напишите менеджеру')
     list_user = get_list_user()
     for user in list_user:
         result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
@@ -298,3 +300,28 @@ async def select_winer(bot: Bot):
             await bot.send_message(chat_id=user[1],
                                    text=f'Список победителей этой недели:\n'
                                         f'{text}')
+
+
+async def send_new_raffle(bot: Bot):
+    list_user = get_list_user()
+    for user in list_user:
+        result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
+        if 'result' in result:
+            await bot.send_message(chat_id=user[1],
+                                   text=f'С началом новой недели!\n'
+                                        f'А значит у нас стартуют новые активности и это твой новый шанс выиграть'
+                                        f' 5.000 руб.',
+                                   reply_markup=keyboard_new_raffle())
+
+
+@router.callback_query(F.data == 'raffle_new')
+async def confirm_new_raffle(callback: CallbackQuery) -> None:
+    logging.info(f'confirm_new_raffle: {callback.message.chat.id}')
+    await confirm_done_task(callback=callback)
+
+
+@router.callback_query(F.data == 'decline_raffle_new')
+async def confirm_decline_raffle_new(callback: CallbackQuery) -> None:
+    logging.info(f'confirm_decline_raffle_new: {callback.message.chat.id}')
+    await callback.message.answer(text=f'Не знаем почему ты решил(а) отказаться от участия, но уважаем твоë решение.'
+                                       f' Если вдруг передумаешь, нажми /start')
