@@ -134,8 +134,9 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
         week_day = datetime.today().weekday()
         week_day = datetime.now().hour
         list_plus_date_raffle = [5, 4, 3, 2, 1, 7, 6]
-        current_date = datetime.now() + timedelta(days=list_plus_date_raffle[week_day])
-        date_raffle = current_date.strftime('%d/%m/%Y')
+        # !!!!!
+        # current_date = datetime.now() + timedelta(days=list_plus_date_raffle[week_day])
+        # date_raffle = current_date.strftime('%d/%m/%Y')
         # !!!!! дата розыгрыша
         date_raffle = datetime.now().strftime('%d/%m/%Y')
         # await state.update_data(date_raffle=date_raffle)
