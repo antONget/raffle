@@ -42,7 +42,7 @@ def get_telegram_user(user_id, bot_token):
 
 
 @router.callback_query(F.data == 'confirm_username')
-async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_task: int = 0) -> None:
+async def task_monday(callback: CallbackQuery, num_task: int = 0) -> None:
     logging.info(f'task_monday: {callback.message.chat.id}')
     # получаем день недели
     week_day = datetime.today().weekday()
@@ -64,7 +64,7 @@ async def task_monday(callback: CallbackQuery, state: FSMContext, bot: Bot, num_
         # !!!!! дата розыгрыша
         date_raffle = datetime.now().strftime('%d/%m/%Y')
         # если пользователь запустил розыгрыш после рассылки первого задания, но до следующего дня
-        await state.update_data(date_raffle=date_raffle)
+        # await state.update_data(date_raffle=date_raffle)
         # добавляем пользователя в базу данных текущего розыгрыша
         add_user_list_raffle(date_raffle=date_raffle,
                              id_telegram=callback.message.chat.id,
@@ -317,7 +317,7 @@ async def send_new_raffle(bot: Bot):
 @router.callback_query(F.data == 'raffle_new')
 async def confirm_new_raffle(callback: CallbackQuery) -> None:
     logging.info(f'confirm_new_raffle: {callback.message.chat.id}')
-    await confirm_done_task(callback=callback)
+    await task_monday(callback=callback, num_task=0)
 
 
 @router.callback_query(F.data == 'decline_raffle_new')
