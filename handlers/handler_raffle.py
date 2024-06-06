@@ -167,8 +167,9 @@ async def confirm_done_task(callback: CallbackQuery) -> None:
     # user_dict[callback.message.chat.id] = await state.get_data()
     # check_day = datetime.now().hour
     num_task = int(callback.data.split('_')[2])
-    # if num_task < 4:
-    if num_task == datetime.now().hour - 12:
+    # !!!!!
+    hour = 15
+    if num_task == datetime.now().hour - hour:
     # if num_task == datetime.today().weekday():
         text_done_task = ['Первое задание ✅\n\nЖди завтра второе!',
                           'Так держать! Уже два задания из пяти сделано✅',
