@@ -1,6 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
+from module.data_base import get_list_user
 
 import logging
 
@@ -33,3 +34,14 @@ async def all_message(message: Message) -> None:
     if message.text == '/get_dbfile':
         file_path = "database.db"
         await message.answer_document(FSInputFile(file_path))
+    if message.text == '/get_listusers':
+        list_user = get_list_user()
+        text = 'Список пользователей:\n'
+        for i, user in enumerate(list_user):
+            text += f'{i+1}. {user[1]} - {user[2]}\n'
+            if i % 20 == 0 and i > 0:
+                await message.answer(text=text)
+                text = ''
+        await message.answer(text=text)
+
+

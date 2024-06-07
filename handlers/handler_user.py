@@ -75,6 +75,7 @@ async def read_condition(callback: CallbackQuery) -> None:
 @router.callback_query(F.data == 'approval')
 async def select_approval(callback: CallbackQuery) -> None:
     logging.info(f'select_approval: {callback.message.chat.id}')
+    set_username(username=callback.from_user.username, telegram_id=callback.message.chat.id)
     await callback.message.answer(text=f'Отлично! Теперь тебя нужно внести в базу участников!\n'
                                        f'Записать, как @{callback.from_user.username}*?\n\n'
                                        f'* - если твой ник не отобразился, нажми «Нет».',

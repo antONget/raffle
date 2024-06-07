@@ -6,7 +6,7 @@ from config_data.config import Config, load_config
 from handlers import handler_user, handler_admin, other_handlers, handler_raffle
 from module.data_base import create_table_users, create_table_message_content
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from handlers.handler_raffle import get_task_monday, TEST_LIST_TIME, select_winer, send_new_raffle
+from handlers.handler_raffle import get_task_monday, select_winer, send_new_raffle
 # Инициализируем logger
 logger = logging.getLogger(__name__)
 
@@ -45,18 +45,20 @@ async def main():
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
     # # выбор победителей
     # scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
-    scheduler.add_job(send_new_raffle, 'cron', hour=15, args=(bot,))
-    scheduler.add_job(get_task_monday, 'cron', hour=15, args=(0, bot,))
-    # вторник
-    scheduler.add_job(get_task_monday, 'cron', hour=16, args=(1, bot,))
-    # среда
-    scheduler.add_job(get_task_monday, 'cron', hour=17, args=(2, bot,))
-    # четверг
-    scheduler.add_job(get_task_monday, 'cron', hour=18, args=(3, bot,))
-    # пятница
-    scheduler.add_job(get_task_monday, 'cron', hour=19, args=(4, bot,))
-    # выбор победителей
-    scheduler.add_job(select_winer, 'cron', hour=20, args=(bot,))
+    # условно воскресенье рассылка о новом розыгрыше
+    scheduler.add_job(send_new_raffle, 'cron', minute=55, args=(bot,))
+    # условно понедельник
+    scheduler.add_job(get_task_monday, 'cron', minute=0, args=(0, bot,))
+    # условно вторник
+    scheduler.add_job(get_task_monday, 'cron', minute=10, args=(1, bot,))
+    # условно среда
+    scheduler.add_job(get_task_monday, 'cron', minute=20, args=(2, bot,))
+    # условно четверг
+    scheduler.add_job(get_task_monday, 'cron', minute=30, args=(3, bot,))
+    # условно пятница
+    scheduler.add_job(get_task_monday, 'cron', minute=40, args=(4, bot,))
+    # условно суббота выбор победителей
+    scheduler.add_job(select_winer, 'cron', minute=50, args=(bot,))
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[2], args=(0, bot,))
     # # вторник
     # scheduler.add_job(get_task_monday, 'cron', day_of_week=0, minute=TEST_LIST_TIME[3], args=(1, bot,))
