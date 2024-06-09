@@ -248,7 +248,7 @@ async def select_winer(bot: Bot):
         if 'result' in result:
             await bot.send_message(chat_id=winer[2],
                                    text='Вы стали победителем этой недели. Поздравляем! Для получения выигрыша,'
-                                        ' напишите менеджеру')
+                                        ' напишите менеджеру @ksxbulkin и пришлите подтверждение выполненных заданий')
     list_user = get_list_user()
     for user in list_user:
         result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
