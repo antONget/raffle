@@ -127,6 +127,7 @@ async def task_monday(callback: CallbackQuery, num_task: int = 0) -> None:
         add_user_list_raffle(date_raffle=date_raffle,
                              id_telegram=callback.message.chat.id,
                              count_task=0)
+    await callback.answer()
 
 
 @router.callback_query(F.data == 'decline_task')
@@ -141,6 +142,7 @@ async def confirm_decline_task(callback: CallbackQuery, state: FSMContext) -> No
     # scheduler.remove_all_jobs()
     await callback.message.answer(text=f'Не знаем почему ты решил(а) отказаться от участия, но уважаем твоë решение.'
                                        f' Если вдруг передумаешь, нажми /start')
+    await callback.answer()
 
 
 @router.callback_query(F.data.startswith('done_task'))
@@ -163,6 +165,7 @@ async def confirm_done_task(callback: CallbackQuery) -> None:
         list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
         await callback.message.answer(text=f'Сожалеем, но ты не успел выполнить {list_task_name[num_task]} задание во время! И не можешь продолжить борьбу за главный приз.\n\n'
                                            f'Но мы напомним тебе о новом розыгрыше в понедельник.')
+    await callback.answer()
 
 
 async def get_task_monday(num_task: int, bot: Bot):
@@ -274,6 +277,7 @@ async def send_new_raffle(bot: Bot):
 async def confirm_new_raffle(callback: CallbackQuery) -> None:
     logging.info(f'confirm_new_raffle: {callback.message.chat.id}')
     await task_monday(callback=callback, num_task=0)
+    await callback.answer()
 
 
 @router.callback_query(F.data == 'decline_raffle_new')
@@ -281,3 +285,4 @@ async def confirm_decline_raffle_new(callback: CallbackQuery) -> None:
     logging.info(f'confirm_decline_raffle_new: {callback.message.chat.id}')
     await callback.message.answer(text=f'Не знаем почему ты решил(а) отказаться от участия, но уважаем твоë решение.'
                                        f' Если вдруг передумаешь, нажми /start')
+    await callback.answer()

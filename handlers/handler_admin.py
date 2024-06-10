@@ -66,3 +66,4 @@ async def get_change_task(message: Message, state: FSMContext) -> None:
 async def select_change_task(callback: CallbackQuery, state: FSMContext) -> None:
     logging.info(f'select_change_task: {callback.message.chat.id}')
     await callback.message.answer(text='Действие отменено')
+    await callback.answer()

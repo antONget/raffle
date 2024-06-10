@@ -70,6 +70,7 @@ async def read_condition(callback: CallbackQuery) -> None:
                                        f'Для получения денежного приза победители должны будут предоставить скрины и др. подтверждения выполнения всех 5 заданий!\n\n'
                                        f'Ну что, готов?',
                                   reply_markup=keyboard_condition())
+    await callback.answer()
 
 
 @router.callback_query(F.data == 'approval')
@@ -80,6 +81,7 @@ async def select_approval(callback: CallbackQuery) -> None:
                                        f'Записать, как @{callback.from_user.username}*?\n\n'
                                        f'* - если твой ник не отобразился, нажми «Нет».',
                                   reply_markup=keyboard_get_username())
+    await callback.answer()
 
 
 @router.callback_query(F.data == 'not_confirm_username')
@@ -88,6 +90,7 @@ async def select_not_confirm_username(callback: CallbackQuery, state: FSMContext
     await callback.message.answer(text='Тогда ты можешь указать ссылку на свой Телеграм или контактный номер для связи:',
                                   reply_markup=keyboards_get_contact())
     await state.set_state(User.username)
+    await callback.answer()
 
 
 @router.message(F.text == 'Отмена', StateFilter(User.username))
@@ -122,3 +125,4 @@ async def process_validate_russian_phone_number(message: Message, state: FSMCont
 async def confirm_get_phone(callback: CallbackQuery, state: FSMContext) -> None:
     logging.info(f'confirm_get_phone: {callback.message.chat.id}')
     await select_not_confirm_username(callback=callback, state=state)
+    await callback.answer()
