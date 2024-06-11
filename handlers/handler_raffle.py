@@ -149,8 +149,6 @@ async def confirm_decline_task(callback: CallbackQuery, state: FSMContext) -> No
 async def confirm_done_task(callback: CallbackQuery, bot: Bot) -> None:
     logging.info(f'confirm_done_task: {callback.message.chat.id} - {datetime.now().minute}')
     num_task = int(callback.data.split('_')[2])
-    # !!!!!
-    # if num_task == datetime.now().minute // 10:
     if num_task == datetime.today().weekday():
         text_done_task = ['Первое задание ✅\n\nЖди завтра второе!',
                           'Так держать! Уже два задания из пяти сделано✅',
