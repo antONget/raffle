@@ -146,7 +146,7 @@ async def confirm_decline_task(callback: CallbackQuery, state: FSMContext) -> No
 
 
 @router.callback_query(F.data.startswith('done_task'))
-async def confirm_done_task(callback: CallbackQuery) -> None:
+async def confirm_done_task(callback: CallbackQuery, bot: Bot) -> None:
     logging.info(f'confirm_done_task: {callback.message.chat.id} - {datetime.now().minute}')
     num_task = int(callback.data.split('_')[2])
     # !!!!!
@@ -165,6 +165,8 @@ async def confirm_done_task(callback: CallbackQuery) -> None:
         list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
         await callback.message.answer(text=f'Сожалеем, но ты не успел выполнить {list_task_name[num_task]} задание во время! И не можешь продолжить борьбу за главный приз.\n\n'
                                            f'Но мы напомним тебе о новом розыгрыше в понедельник.')
+    await bot.delete_message(chat_id=callback.message.chat.id,
+                             message_id=callback.message.message_id)
     await callback.answer()
 
 
@@ -182,21 +184,29 @@ async def get_task_monday(num_task: int, bot: Bot):
             if user_raffle[3] != -1 or user_raffle[3] == num_task:
                 result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                 if 'result' in result:
-                    await bot.send_message(chat_id=user_raffle[2],
-                                           text=text,
-                                           reply_markup=keyboard_task(num_task=num_task),
-                                           parse_mode='html')
+                    await asyncio.sleep(0.1)
+                    try:
+                        await bot.send_message(chat_id=user_raffle[2],
+                                               text=text,
+                                               reply_markup=keyboard_task(num_task=num_task),
+                                               parse_mode='html')
+                    except:
+                        pass
     else:
         for user_raffle in list_raffle:
             print(238, user_raffle)
             if user_raffle[3] != -1 or user_raffle[3] == num_task:
                 result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                 if 'result' in result:
-                    await bot.send_photo(chat_id=user_raffle[2],
-                                         photo=message_content[3],
-                                         caption=text,
-                                         reply_markup=keyboard_task(num_task=num_task),
-                                         parse_mode='html')
+                    await asyncio.sleep(0.1)
+                    try:
+                        await bot.send_photo(chat_id=user_raffle[2],
+                                             photo=message_content[3],
+                                             caption=text,
+                                             reply_markup=keyboard_task(num_task=num_task),
+                                             parse_mode='html')
+                    except:
+                        pass
 
     # !!! ПЕРВОЕ ДОСЫЛЬНОЕ СООБЩЕНИЕ
     await asyncio.sleep(1 * 60 * 60)
