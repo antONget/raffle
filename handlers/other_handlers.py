@@ -4,6 +4,7 @@ from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
 from module.data_base import get_list_user
+from services.get_exel import list_users_to_exel
 
 import logging
 
@@ -46,5 +47,9 @@ async def all_message(message: Message) -> None:
                 await message.answer(text=text)
                 text = ''
         await message.answer(text=text)
+    if message.text == '/get_exel':
+        list_users_to_exel()
+        file_path = "list_user.xlsx"  # или "folder/filename.ext"
+        await message.answer_document(FSInputFile(file_path))
 
 

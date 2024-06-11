@@ -180,12 +180,12 @@ async def get_task_monday(num_task: int, bot: Bot):
     i = 0
     if message_content[3] == 'none':
         for user_raffle in list_raffle:
+            i += 1
             if user_raffle[3] != -1 or user_raffle[3] == num_task:
                 result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                 if 'result' in result:
                     await asyncio.sleep(0.1)
                     try:
-                        i += 1
                         if i % 100 == 0:
                             await bot.send_message(chat_id=843554518,
                                                    text=str(i))
@@ -197,13 +197,12 @@ async def get_task_monday(num_task: int, bot: Bot):
                         pass
     else:
         for user_raffle in list_raffle:
-            print(238, user_raffle)
+            i += 1
             if user_raffle[3] != -1 or user_raffle[3] == num_task:
                 result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                 if 'result' in result:
                     await asyncio.sleep(0.1)
                     try:
-                        i += 1
                         if i % 100 == 0:
                             await bot.send_message(chat_id=843554518,
                                                    text=str(i))
