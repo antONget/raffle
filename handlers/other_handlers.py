@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
@@ -39,7 +41,8 @@ async def all_message(message: Message) -> None:
         text = 'Список пользователей:\n'
         for i, user in enumerate(list_user):
             text += f'{i+1}. {user[1]} - {user[2]}\n'
-            if i % 20 == 0 and i > 0:
+            if i % 10 == 0 and i > 0:
+                await asyncio.sleep(0.2)
                 await message.answer(text=text)
                 text = ''
         await message.answer(text=text)
