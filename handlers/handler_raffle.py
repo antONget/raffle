@@ -177,6 +177,7 @@ async def get_task_monday(num_task: int, bot: Bot):
     if '\\n' in message_content[2]:
         text = message_content[2].replace('\\n', '\n')
     # если нет изображения
+    i = 0
     if message_content[3] == 'none':
         for user_raffle in list_raffle:
             if user_raffle[3] != -1 or user_raffle[3] == num_task:
@@ -184,6 +185,10 @@ async def get_task_monday(num_task: int, bot: Bot):
                 if 'result' in result:
                     await asyncio.sleep(0.1)
                     try:
+                        i += 1
+                        if i % 100 == 0:
+                            await bot.send_message(chat_id=843554518,
+                                                   text=str(i))
                         await bot.send_message(chat_id=user_raffle[2],
                                                text=text,
                                                reply_markup=keyboard_task(num_task=num_task),
@@ -198,6 +203,10 @@ async def get_task_monday(num_task: int, bot: Bot):
                 if 'result' in result:
                     await asyncio.sleep(0.1)
                     try:
+                        i += 1
+                        if i % 100 == 0:
+                            await bot.send_message(chat_id=843554518,
+                                                   text=str(i))
                         await bot.send_photo(chat_id=user_raffle[2],
                                              photo=message_content[3],
                                              caption=text,
