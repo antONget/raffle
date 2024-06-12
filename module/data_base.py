@@ -522,9 +522,9 @@ def get_last_date_raffle():
     with db:
         sql = db.cursor()
         sql.execute('SELECT * FROM list_raffle')
-        if sql.fetchall():
-            date_raffle = sql.fetchall()[-1][1]
-            return date_raffle
+        date_raffle = sql.fetchall()
+        if len(date_raffle):
+            return date_raffle[-1][1]
         else:
             return 0
 
