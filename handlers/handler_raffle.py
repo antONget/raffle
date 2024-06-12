@@ -255,26 +255,34 @@ async def get_task_monday(num_task: int, bot: Bot):
 
 async def select_winer(bot: Bot):
     list_raffle = get_list_last_raffle(done_task=5)
-    if len(list_raffle) >= 5:
-        list_winer = random.choice(list_raffle, 5)
+    if list_raffle:
+        if len(list_raffle) >= 5:
+            list_winer = random.choice(list_raffle, 5)
+        else:
+            list_winer = list_raffle
+        text = ''
+        for winer in list_winer:
+            infor_user = get_info_user(telegram_id=winer[2])
+            text += f'{infor_user[2]}\n'
+            result = get_telegram_user(user_id=winer[2], bot_token=config.tg_bot.token)
+            if 'result' in result:
+                await bot.send_message(chat_id=winer[2],
+                                       text='Вы стали победителем этой недели. Поздравляем! Для получения выигрыша,'
+                                            ' напишите менеджеру @ksxbulkin и пришлите подтверждение выполненных заданий')
+        list_user = get_list_user()
+        for user in list_user:
+            result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
+            if 'result' in result:
+                await bot.send_message(chat_id=user[1],
+                                       text=f'Список победителей этой недели:\n'
+                                            f'{text}')
     else:
-        list_winer = list_raffle
-    text = ''
-    for winer in list_winer:
-        infor_user = get_info_user(telegram_id=winer[2])
-        text += f'{infor_user[2]}\n'
-        result = get_telegram_user(user_id=winer[2], bot_token=config.tg_bot.token)
-        if 'result' in result:
-            await bot.send_message(chat_id=winer[2],
-                                   text='Вы стали победителем этой недели. Поздравляем! Для получения выигрыша,'
-                                        ' напишите менеджеру @ksxbulkin и пришлите подтверждение выполненных заданий')
-    list_user = get_list_user()
-    for user in list_user:
-        result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
-        if 'result' in result:
-            await bot.send_message(chat_id=user[1],
-                                   text=f'Список победителей этой недели:\n'
-                                        f'{text}')
+        list_super_admin = list(map(int, config.tg_bot.admin_ids.split(',')))
+        for admin in list_super_admin:
+            result = get_telegram_user(user_id=admin, bot_token=config.tg_bot.token)
+            if 'result' in result:
+                await bot.send_message(chat_id=admin,
+                                       text=f'Никто не выполнил 5 занятий')
 
 
 async def send_new_raffle(bot: Bot):

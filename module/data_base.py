@@ -522,20 +522,24 @@ def get_last_date_raffle():
     with db:
         sql = db.cursor()
         sql.execute('SELECT * FROM list_raffle')
-        date_raffle = sql.fetchall()[-1][1]
-        return date_raffle
-
+        if sql.fetchall():
+            date_raffle = sql.fetchall()[-1][1]
+            return date_raffle
+        else:
+            return 0
 
 def get_list_last_raffle(done_task: int) -> list:
     logging.info(f'get_list_rafle')
     date_raffle = get_last_date_raffle()
-    with db:
-        sql = db.cursor()
-        sql.execute('SELECT * FROM list_raffle WHERE count_task = ? AND date_raffle = ?', (done_task, date_raffle,))
-        date_raffle = sql.fetchall()
-        print(date_raffle)
-        return date_raffle
-
+    if date_raffle:
+        with db:
+            sql = db.cursor()
+            sql.execute('SELECT * FROM list_raffle WHERE count_task = ? AND date_raffle = ?', (done_task, date_raffle,))
+            list_last_raffle = sql.fetchall()
+            print(date_raffle)
+            return list_last_raffle
+    else:
+        return 0
 
 def get_info_user_raffle(id_telegram: int, date_raffle: str) -> list:
     logging.info(f'get_list_rafle')
