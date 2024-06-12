@@ -54,6 +54,7 @@ async def all_message(message: Message) -> None:
             file_path = "list_user.xlsx"  # или "folder/filename.ext"
             await message.answer_document(FSInputFile(file_path))
         if '/get_CULR' in message.text:
+            logging.info(f'all_message-/get_CULR')
             list_message = message.text.split()
             if len(list_message) == 3:
                 done_task = int(list_message[2])
