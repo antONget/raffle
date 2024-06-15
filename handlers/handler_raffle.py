@@ -257,7 +257,7 @@ async def select_winer(bot: Bot):
     list_raffle = get_list_last_raffle(done_task=5)
     if list_raffle:
         if len(list_raffle) >= 5:
-            list_winer = random.choice(list_raffle, 5)
+            list_winer = random.choices(list_raffle, k=5)
         else:
             list_winer = list_raffle
         text = ''

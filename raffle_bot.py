@@ -44,7 +44,7 @@ async def main():
     # # пятница
     scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=12, minute=0, args=(4, bot,))
     # # выбор победителей
-    scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=0, args=(bot,))
+    scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=12, minute=20, args=(bot,))
     # воскресенье
     scheduler.add_job(send_new_raffle, 'cron', day_of_week=6, hour=15, minute=0, args=(bot,))
     # условно воскресенье рассылка о новом розыгрыше
