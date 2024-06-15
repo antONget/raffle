@@ -3,7 +3,7 @@ from aiogram.types import Message
 import sqlite3
 from config_data.config import Config, load_config
 import logging
-
+from datetime import datetime, timedelta
 
 config: Config = load_config()
 db = sqlite3.connect('database.db', check_same_thread=False, isolation_level='EXCLUSIVE')
@@ -519,14 +519,19 @@ def set_done_task(id_telegram: int, date_raffle: str, done_task: int):
 
 def get_last_date_raffle():
     logging.info(f'get_last_date_raffle')
-    with db:
-        sql = db.cursor()
-        sql.execute('SELECT * FROM list_raffle')
-        date_raffle = sql.fetchall()
-        if len(date_raffle):
-            return date_raffle[-1][1]
-        else:
-            return 0
+    week_day = datetime.today().weekday()
+    list_plus_date_raffle = [5, 4, 3, 2, 1, 0, 6]
+    date_raffle = (datetime.now() + timedelta(days=list_plus_date_raffle[week_day])).strftime('%d/%m/%Y')
+    return date_raffle
+    # with db:
+    #     sql = db.cursor()
+    #     sql.execute('SELECT * FROM list_raffle')
+    #     date_raffle = sql.fetchall()
+    #     if len(date_raffle):
+    #         return '15/06/2024'
+    #         # return date_raffle[-1][1]
+    #     else:
+    #         return 0
 
 def get_list_last_raffle(done_task: int) -> list:
     logging.info(f'get_list_rafle')
@@ -535,6 +540,20 @@ def get_list_last_raffle(done_task: int) -> list:
         with db:
             sql = db.cursor()
             sql.execute('SELECT * FROM list_raffle WHERE count_task = ? AND date_raffle = ?', (done_task, date_raffle,))
+            list_last_raffle = sql.fetchall()
+            print(date_raffle)
+            return list_last_raffle
+    else:
+        return 0
+
+
+def get_list_last_raffle_all() -> list:
+    logging.info(f'get_list_rafle')
+    date_raffle = get_last_date_raffle()
+    if date_raffle:
+        with db:
+            sql = db.cursor()
+            sql.execute('SELECT * FROM list_raffle WHERE date_raffle = ?', (date_raffle,))
             list_last_raffle = sql.fetchall()
             print(date_raffle)
             return list_last_raffle
