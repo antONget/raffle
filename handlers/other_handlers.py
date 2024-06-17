@@ -1,17 +1,16 @@
 import asyncio
 
-from aiogram import Router
+from aiogram import Router, Bot
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import FSInputFile
-from module.data_base import get_list_user, get_list_last_raffle
+from module.data_base import get_list_user, get_list_last_raffle, get_list_last_raffle_all
 from services.get_exel import list_users_to_exel
 from config_data.config import Config, load_config
+from handlers.handler_raffle import send_new_raffle
 import logging
 
 router = Router()
 config: Config = load_config()
-
-
 
 
 @router.callback_query()
@@ -21,7 +20,7 @@ async def all_calback(callback: CallbackQuery) -> None:
 
 
 @router.message()
-async def all_message(message: Message) -> None:
+async def all_message(message: Message, bot: Bot) -> None:
     logging.info(f'all_message')
     list_super_admin = list(map(int, config.tg_bot.admin_ids.split(',')))
     if message.chat.id in list_super_admin:
@@ -61,21 +60,9 @@ async def all_message(message: Message) -> None:
                     count_raffle_task = len(list_raffle)
                 else:
                     count_raffle_task = 0
-                list_raffle_0 = get_list_last_raffle(done_task=0)
-                if list_raffle_0:
-                    count_raffle_task_0 = len(list_raffle)
-                else:
-                    count_raffle_task_0 = 0
                 await message.answer(text=f'Количество участников выполнивших {done_task} заданий: '
-                                          f'{count_raffle_task}\n'
-                                          f'Количество участников зарегистрировавшихся на участие в розыгрыше: '
-                                          f'{count_raffle_task_0}')
-            elif len(list_message) == 2:
-                list_raffle = get_list_last_raffle(done_task=0)
-                if list_raffle:
-                    count_raffle_task = len(list_raffle)
-                else:
-                    count_raffle_task = 0
-                await message.answer(text=f'Количество участников зарегистрировавшихся на участие в розыгрыше: '
-                                          f'{count_raffle_task}')
+                                          f'{count_raffle_task}\n')
+        if message.text == '/send_remember':
+            logging.info(f'all_message-/send_remember')
+            await send_new_raffle(bot=bot)
 
