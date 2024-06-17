@@ -106,7 +106,7 @@ async def all_message(message: Message, bot: Bot, state: FSMContext) -> None:
 
         if '/send_message' in message.text:
             logging.info(f'all_message-/send_message')
-            send = message.text
+            send = message.text.split('_')
             if send[2] == "all":
                 await message.answer(text='Пришлите текст чтобы его отправить всем пользователям бота')
                 await state.set_state(Admin.message_all)
