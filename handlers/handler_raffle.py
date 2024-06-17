@@ -290,6 +290,7 @@ async def send_new_raffle(bot: Bot):
     for user in list_user:
         result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
         if 'result' in result:
+            await asyncio.sleep(0.1)
             await bot.send_message(chat_id=user[1],
                                    text=f'С началом новой недели!\n'
                                         f'А значит у нас стартуют новые активности и это твой новый шанс выиграть'
