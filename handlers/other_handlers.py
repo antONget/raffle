@@ -42,6 +42,8 @@ async def all_message(message: Message, bot: Bot, state: FSMContext) -> None:
     id_user = int(data['id_user'])
     await bot.send_message(chat_id=id_user,
                            text=message_id)
+    await message.answer(text='Сообщение отправлено')
+    await state.set_state(default_state)
 
 
 @router.message(StateFilter(Admin.message_all))
@@ -49,12 +51,15 @@ async def all_message(message: Message, bot: Bot, state: FSMContext) -> None:
     logging.info(f'Admin.message_id')
     message_all = message.html_text
     list_user = get_list_user()
+    await message.answer(text='Рассылка запущена...')
     for user in list_user:
         result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
         if 'result' in result:
             await asyncio.sleep(0.1)
             await bot.send_message(chat_id=user[1],
                                    text=message_all)
+    await message.edit_text(text='Рассылка завершена...')
+    await state.set_state(default_state)
 
 
 @router.message()
@@ -117,7 +122,7 @@ async def all_message(message: Message, bot: Bot, state: FSMContext) -> None:
                     if info_user:
                         result = get_telegram_user(user_id=id_user, bot_token=config.tg_bot.token)
                         if 'result' in result:
-                            await message.answer(text=f'Пришлите текст чтобы его отправить пользователю {info_user[2]}')
+                            await message.answer(text=f'Пришлите текст чтобы его отправить пользователю @{info_user[2]}')
                             await state.update_data(id_user=id_user)
                             await state.set_state(Admin.message_id)
                         else:
