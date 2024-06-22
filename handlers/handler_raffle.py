@@ -163,8 +163,11 @@ async def confirm_done_task(callback: CallbackQuery, bot: Bot) -> None:
         list_task_name = ['первое', 'второе', 'третье', 'четвертое', 'пятое']
         await callback.message.answer(text=f'Сожалеем, но ты не успел выполнить {list_task_name[num_task]} задание во время! И не можешь продолжить борьбу за главный приз.\n\n'
                                            f'Но мы напомним тебе о новом розыгрыше в понедельник.')
-    await bot.delete_message(chat_id=callback.message.chat.id,
-                             message_id=callback.message.message_id)
+    try:
+        await bot.delete_message(chat_id=callback.message.chat.id,
+                                 message_id=callback.message.message_id)
+    except:
+        pass
     await callback.answer()
 
 
@@ -229,12 +232,15 @@ async def get_task_monday(num_task: int, bot: Bot):
             print(260, user_raffle)
             result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
             if 'result' in result:
-                await bot.send_message(chat_id=user_raffle[2],
-                                       text=f'Выше мы прислали тебе {list_task_name[user_raffle[3]]} задание!\n'
-                                            f'Оно выполнено?\n\n'
-                                            f'Если нет - скорее выполняй и не забудь сделать и сохранить скриншот,'
-                                            f' а после нажать кнопку "Выполнено" ниже.',
-                                       reply_markup=keyboard_task(num_task=num_task))
+                try:
+                    await bot.send_message(chat_id=user_raffle[2],
+                                           text=f'Выше мы прислали тебе {list_task_name[user_raffle[3]]} задание!\n'
+                                                f'Оно выполнено?\n\n'
+                                                f'Если нет - скорее выполняй и не забудь сделать и сохранить скриншот,'
+                                                f' а после нажать кнопку "Выполнено" ниже.',
+                                           reply_markup=keyboard_task(num_task=num_task))
+                except:
+                    pass
             await asyncio.sleep(3 * 60 * 60)
             # await asyncio.sleep(1 * 60 * 5)
             list_raffle = get_list_last_raffle(done_task=num_task)
@@ -245,13 +251,15 @@ async def get_task_monday(num_task: int, bot: Bot):
                     print(276, user_raffle)
                     result = get_telegram_user(user_id=user_raffle[2], bot_token=config.tg_bot.token)
                     if 'result' in result:
-                        await bot.send_message(chat_id=user_raffle[2],
-                                               text=f'Осталось совсем немного времени, чтобы выполнить {list_task_name[user_raffle[3]]} задание.'
-                                                    f' Больше напоминать не будем!\n\n'
-                                                    f'Скорее выполняй! Не забудь сделать и сохранить скриншот, а после'
-                                                    f' нажать кнопку "Выполнено" ниже.',
-                                               reply_markup=keyboard_task(num_task=num_task))
-
+                        try:
+                            await bot.send_message(chat_id=user_raffle[2],
+                                                   text=f'Осталось совсем немного времени, чтобы выполнить {list_task_name[user_raffle[3]]} задание.'
+                                                        f' Больше напоминать не будем!\n\n'
+                                                        f'Скорее выполняй! Не забудь сделать и сохранить скриншот, а после'
+                                                        f' нажать кнопку "Выполнено" ниже.',
+                                                   reply_markup=keyboard_task(num_task=num_task))
+                        except:
+                            pass
 
 async def select_winer(bot: Bot):
     list_raffle = get_list_last_raffle(done_task=5)
@@ -266,24 +274,42 @@ async def select_winer(bot: Bot):
             text += f'{infor_user[2]}\n'
             result = get_telegram_user(user_id=winer[2], bot_token=config.tg_bot.token)
             if 'result' in result:
-                await bot.send_message(chat_id=winer[2],
-                                       text='Вы стали победителем этой недели. Поздравляем! Для получения выигрыша,'
-                                            ' напишите менеджеру @ksxbulkin и пришлите подтверждение выполненных заданий')
+                try:
+                    await bot.send_message(chat_id=winer[2],
+                                           text='Вы стали победителем этой недели. Поздравляем! Для получения выигрыша,'
+                                                ' напишите менеджеру @ksxbulkin и пришлите подтверждение выполненных заданий')
+                except:
+                    pass
+        list_super_admin = list(map(int, config.tg_bot.admin_ids.split(',')))
+        for admin in list_super_admin:
+            result = get_telegram_user(user_id=admin, bot_token=config.tg_bot.token)
+            if 'result' in result:
+                try:
+                    await bot.send_message(chat_id=admin,
+                                           text=f'Список победителей этой недели:\n'
+                                                f'{text}')
+                except:
+                    pass
         list_user = get_list_user()
         for user in list_user:
             result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
             if 'result' in result:
-                await bot.send_message(chat_id=user[1],
-                                       text=f'Список победителей этой недели:\n'
-                                            f'{text}')
+                try:
+                    await bot.send_message(chat_id=user[1],
+                                           text=f'Список победителей этой недели:\n'
+                                                f'{text}')
+                except:
+                    pass
     else:
         list_super_admin = list(map(int, config.tg_bot.admin_ids.split(',')))
         for admin in list_super_admin:
             result = get_telegram_user(user_id=admin, bot_token=config.tg_bot.token)
             if 'result' in result:
-                await bot.send_message(chat_id=admin,
-                                       text=f'Никто не выполнил 5 занятий')
-
+                try:
+                    await bot.send_message(chat_id=admin,
+                                           text=f'Никто не выполнил 5 занятий')
+                except:
+                    pass
 
 async def send_new_raffle(bot: Bot):
     list_user = get_list_user()
@@ -291,12 +317,14 @@ async def send_new_raffle(bot: Bot):
         result = get_telegram_user(user_id=user[1], bot_token=config.tg_bot.token)
         if 'result' in result:
             await asyncio.sleep(0.1)
-            await bot.send_message(chat_id=user[1],
-                                   text=f'С началом новой недели!\n'
-                                        f'А значит у нас стартуют новые активности и это твой новый шанс выиграть'
-                                        f' 5.000 руб.',
-                                   reply_markup=keyboard_new_raffle())
-
+            try:
+                await bot.send_message(chat_id=user[1],
+                                       text=f'С началом новой недели!\n'
+                                            f'А значит у нас стартуют новые активности и это твой новый шанс выиграть'
+                                            f' 5.000 руб.',
+                                       reply_markup=keyboard_new_raffle())
+            except:
+                pass
 
 @router.callback_query(F.data == 'raffle_new')
 async def confirm_new_raffle(callback: CallbackQuery) -> None:
