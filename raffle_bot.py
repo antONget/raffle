@@ -36,7 +36,7 @@ async def main():
     # # понедельник
     scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=12, minute=0, args=(0, bot,))
     # # вторник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=12, minute=0, args=(1, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=13, minute=0, args=(1, bot,))
     # # среда
     scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=12, minute=0, args=(2, bot,))
     # # четверг
