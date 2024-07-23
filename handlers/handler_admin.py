@@ -48,11 +48,8 @@ async def get_change_task(message: Message, state: FSMContext) -> None:
     number_task = user_dict[message.chat.id]['number_task']
     if message.photo:
         logging.info(f'all_message message.photo')
-        print(message.photo[-1].file_id)
         set_message_image(id_message=number_task, message_image=message.photo[-1].file_id)
-        print(message)
-        print(message.html_text)
-        set_message_text(id_message=number_task, message_text=message.html_text)
+        set_message_text(id_message=number_task, message_text=message.caption)
         await message.answer(text='Задание обновлено')
     if message.text:
         print(message.html_text)
