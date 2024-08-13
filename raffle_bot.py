@@ -34,17 +34,17 @@ async def main():
     dp = Dispatcher()
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
     # # понедельник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=13, minute=0, args=(0, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=0, hour=13, minute=20, args=(0, bot,))
     # # вторник
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=13, minute=0, args=(1, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=1, hour=13, minute=20, args=(1, bot,))
     # # среда
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=13, minute=0, args=(2, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=2, hour=13, minute=20, args=(2, bot,))
     # # четверг
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=13, minute=15, args=(3, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=3, hour=13, minute=20, args=(3, bot,))
     # # пятница
-    scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=13, minute=0, args=(4, bot,))
+    scheduler.add_job(get_task_monday, 'cron', day_of_week=4, hour=13, minute=20, args=(4, bot,))
     # # выбор победителей
-    scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=13, minute=0, args=(bot,))
+    scheduler.add_job(select_winer, 'cron', day_of_week=5, hour=13, minute=20, args=(bot,))
     # воскресенье
     scheduler.add_job(send_new_raffle, 'cron', day_of_week=6, hour=15, minute=0, args=(bot,))
     # условно воскресенье рассылка о новом розыгрыше
